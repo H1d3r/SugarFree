@@ -12,7 +12,7 @@ type Section struct {
 }
 
 // WriteToFile function
-func WriteToFile(sections []Section, filePath string, fileName string, fileSize int64) {
+func WriteToFile(sections []Section, filePath string, fileName string, fileSize int64, fullEntropy float64) {
 	// Open file to write
 	file, err := os.Create(filePath)
 	if err != nil {
@@ -24,6 +24,7 @@ func WriteToFile(sections []Section, filePath string, fileName string, fileSize 
 	// Write to the file
 	fmt.Fprintf(file, "[+] Analyzing the %s file\n", fileName)
 	fmt.Fprintf(file, "[+] File Size: %d bytes\n", fileSize)
+	fmt.Fprintf(file, "[+] Full PE Entropy: %.5f\n", fullEntropy)
 	fmt.Fprintln(file, "[+] PE Sections and their entropy:")
 
 	for _, section := range sections {

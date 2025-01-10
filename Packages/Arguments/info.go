@@ -107,7 +107,7 @@ var infoArgument = &cobra.Command{
 		// Check if the output flag is empty.
 		if output != "" {
 			// Call function named WriteToFile
-			Output.WriteToFile(outputSections, output, file, fileSize)
+			Output.WriteToFile(outputSections, output, file, fileSize, fullEntropy)
 
 			// Call function named GetAbsolutePath
 			outputFilePath, err := Utils.GetAbsolutePath(output)

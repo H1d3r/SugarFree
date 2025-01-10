@@ -59,11 +59,17 @@ func init() {
 	SugarFreeCli.Flags().SortFlags = true
 	SugarFreeCli.Flags().BoolP("version", "v", false, "Show Jungler current version")
 	SugarFreeCli.AddCommand(infoArgument)
+	SugarFreeCli.AddCommand(freeArgument)
 
 	// Add flags to the 'info' command.
 	infoArgument.Flags().SortFlags = true
 	infoArgument.Flags().StringP("file", "f", "", "Set input file")
 	infoArgument.Flags().StringP("output", "o", "", "Save results to output file")
+
+	// Add flags to the 'free' command.
+	freeArgument.Flags().SortFlags = true
+	freeArgument.Flags().StringP("file", "f", "", "Set input file")
+	freeArgument.Flags().StringP("output", "o", "", "Save results to output file")
 }
 
 // ShowVersion function
