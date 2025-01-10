@@ -14,7 +14,7 @@ var (
 	__license__      = "MIT"
 	__author__       = []string{"@nickvourd", "@IAMCOMPROMISED"}
 	__github__       = "https://github.com/nickvourd/SugarFree"
-	__version_name__ = "Zero"
+	__version_name__ = "Zero Calories"
 	__ascii__        = `
  
 ███████╗██╗   ██╗ ██████╗  █████╗ ██████╗ ███████╗██████╗ ███████╗███████╗
