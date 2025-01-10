@@ -1,2 +1,2 @@
 # SugarFree
-Less sugar (entropy) for you binaries
+Less sugar (entropy) for your binaries
