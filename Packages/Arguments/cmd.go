@@ -70,6 +70,7 @@ func init() {
 	freeArgument.Flags().SortFlags = true
 	freeArgument.Flags().StringP("file", "f", "", "Set input file")
 	freeArgument.Flags().StringP("output", "o", "", "Save results to output file")
+	freeArgument.Flags().BoolP("graph", "g", false, "Creat a entropy graph image")
 }
 
 // ShowVersion function

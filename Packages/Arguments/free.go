@@ -39,6 +39,7 @@ var freeArgument = &cobra.Command{
 		// Get variables from the command line.
 		file, _ := cmd.Flags().GetString("file")
 		output, _ := cmd.Flags().GetString("output")
+		graph, _ := cmd.Flags().GetBool("graph")
 
 		// Check if the file flag is empty.
 		if file == "" {
@@ -46,6 +47,7 @@ var freeArgument = &cobra.Command{
 		}
 
 		fmt.Print(output)
+		fmt.Print(graph)
 
 		return nil
 	},
