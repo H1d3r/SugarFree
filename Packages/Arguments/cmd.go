@@ -57,7 +57,7 @@ func init() {
 
 	// Add commands to the SugarFree CLI.
 	SugarFreeCli.Flags().SortFlags = true
-	SugarFreeCli.Flags().BoolP("version", "v", false, "Show Jungler current version")
+	SugarFreeCli.Flags().BoolP("version", "v", false, "Show SugarFree current version")
 	SugarFreeCli.AddCommand(infoArgument)
 	SugarFreeCli.AddCommand(freeArgument)
 
@@ -70,7 +70,7 @@ func init() {
 	freeArgument.Flags().SortFlags = true
 	freeArgument.Flags().StringP("file", "f", "", "Set input file")
 	freeArgument.Flags().StringP("output", "o", "", "Save results to output file")
-	freeArgument.Flags().BoolP("graph", "g", false, "Creat a entropy graph image")
+	freeArgument.Flags().BoolP("graph", "g", false, "Create a entropy graph image")
 }
 
 // ShowVersion function

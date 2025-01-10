@@ -118,7 +118,7 @@ func ColorNameManager(section string) string {
 	return sectionNameColor
 }
 
-// FullEntropy function calculates the total entropy of all sections in the PE file
+// FullEntropy function
 func FullEntropy(sections []SectionEntropy) float64 {
 	// Initialize a variable to hold the sum of all entropies
 	var totalEntropy float64
