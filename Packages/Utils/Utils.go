@@ -78,6 +78,16 @@ func BuildNewName(name, extension, additionalName string) string {
 		ext = "." + extension
 	}
 
+	// If additionalName is a string containing a number
+	value, err := strconv.ParseFloat(additionalName, 64)
+	if err != nil {
+		// Handle error if the string can't be converted to float
+		log.Fatal("Error converting string to float: ", err)
+		return ""
+	}
+
+	additionalName = fmt.Sprintf("%.5f", value)
+
 	// Build the new name: name_additionalName.extension
 	return fmt.Sprintf("%s_%s%s", name, additionalName, ext)
 }

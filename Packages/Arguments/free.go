@@ -6,6 +6,7 @@ import (
 	"SugarFree/Packages/Reduce"
 	"SugarFree/Packages/Utils"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -41,7 +42,7 @@ var freeArgument = &cobra.Command{
 		}
 
 		// Define variables
-		var entropy string
+		//var entropy string
 
 		// Get variables from the command line
 		file, _ := cmd.Flags().GetString("file")
@@ -79,35 +80,50 @@ var freeArgument = &cobra.Command{
 		fmt.Printf("[+] Analyzing PE File: %s\n", Colors.BoldCyan(file))
 		fmt.Printf("[+] Initial File Size: %s KB\n", Colors.BoldYellow(fileSize))
 
-		// Call function named ReadSections
-		sections, err := Calculate.ReadSections(filePath)
+		// Read original binary data
+		originalData, err := ioutil.ReadFile(file)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("Error reading input file: %v\n", err)
+			os.Exit(1)
 		}
 
-		// Call function named FullEntropy
-		initialEntropy := Calculate.CalculateFullEntropy(sections)
+		// Call function named CalculateFullEntropy
+		initialEntropy := Calculate.CalculateFullEntropy(originalData)
 
 		// Display initial overall PE entropy
 		fmt.Printf("[+] Initial Overall PE Entropy: %s\n\n", Colors.CalculateColor2Entropy(initialEntropy))
 
-		// Call function named ReduceEntropy
-		reduceSections, err := Reduce.ReduceEntropy(filePath, Reduce.ReductionStrategy{Aggressive: true})
-		if err != nil {
-			logger.Fatal("Error during entropy reduction: ", err)
-		}
+		// Copy the original data
+		modifiedData := make([]byte, len(originalData))
+		copy(modifiedData, originalData)
 
-		finalEntropy := Calculate.CalculateFullEntropy(reduceSections)
+		// Call function named ApplyStrategy
+		modifiedData = Reduce.ApplyStrategy(modifiedData, 60000)
+
+		finalEntropy := Calculate.CalculateFullEntropy(modifiedData)
 		fmt.Printf("[+] Staged Reduction - Overall PE Entropy: %s\n", Colors.CalculateColor2Entropy(finalEntropy))
 		reductionPercentage := ((initialEntropy - finalEntropy) / initialEntropy) * 100
 		fmt.Printf("[+] Entropy Reduction Percentage: %s%%\n", Colors.BoldBlue(fmt.Sprintf("%.2f", reductionPercentage)))
 
 		// Convert float to string
-		entropy = strconv.FormatFloat(finalEntropy, 'f', -1, 64)
+		entropy := strconv.FormatFloat(finalEntropy, 'f', -1, 64)
 
 		// Call function named BuildNewName
 		newFileName := Utils.BuildNewName(fileName, fileExtension, entropy)
 
+		// Write modified data to output file
+		if err := ioutil.WriteFile(newFileName, modifiedData, 0644); err != nil {
+			fmt.Printf("[!] Error writing output file: %v\n", err)
+			os.Exit(1)
+		}
+
+		// Call function named GetAbsoluteFilePath
+		newFileName, err = Utils.GetAbsolutePath(newFileName)
+		if err != nil {
+			logger.Fatal("Error: ", err)
+		}
+
+		// Display the new file name
 		fmt.Printf("[+] Saved to: %s\n\n", Colors.BoldCyan(newFileName))
 
 		// Record the end time

@@ -89,8 +89,13 @@ var infoArgument = &cobra.Command{
 			})
 		}
 
-		// Call function named FullEntropy
-		fullEntropy := Calculate.CalculateFullEntropy(sections)
+		// Read the file
+		buf, err := os.ReadFile(file)
+		if err != nil {
+			logger.Fatal("Error: ", err)
+		}
+
+		fullEntropy := Calculate.CalculateFullEntropy(buf)
 
 		// Print the results
 		fmt.Printf("[+] Analyzing PE File: %s\n", Colors.BoldCyan(file))
@@ -119,7 +124,7 @@ var infoArgument = &cobra.Command{
 				logger.Fatal("Error: ", err)
 			}
 
-			fmt.Printf("\n[+] Results saved to: %s\n\n", Colors.BoldCyan(outputFilePath))
+			fmt.Printf("\n[+] Results saved to: %s\n", Colors.BoldCyan(outputFilePath))
 		}
 
 		// Record the end time
@@ -129,7 +134,7 @@ var infoArgument = &cobra.Command{
 		calculateDurationTime := calculateEndTime.Sub(calculateStartTime)
 
 		// Print the duration
-		fmt.Printf("[*] Completed in: %s\n\n", Colors.BoldWhite(calculateDurationTime))
+		fmt.Printf("\n[*] Completed in: %s\n\n", Colors.BoldWhite(calculateDurationTime))
 
 		return nil
 	},

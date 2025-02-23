@@ -18,32 +18,23 @@ type SectionEntropy struct {
 }
 
 // CalculateFullEntropy function
-func CalculateFullEntropy(sections []SectionEntropy) float64 {
-	var totalSize int64
-	var weightedEntropy float64
+func CalculateFullEntropy(buffer []byte) float64 {
+	entropy := 0.0
 
-	// Calculate weighted sum of entropies
-	for _, section := range sections {
-		totalSize += section.Size
-		weightedEntropy += float64(section.Size) * section.Entropy
+	// Create a map to count byte occurrences
+	counts := make(map[byte]int)
+	for _, b := range buffer {
+		counts[b]++
 	}
 
-	// Handle empty file case
-	if totalSize == 0 {
-		log.Printf("Warning: No valid sections found for entropy calculation")
-		return 0
+	// Calculate entropy using Shannon's formula
+	bufferLen := float64(len(buffer))
+	for _, count := range counts {
+		p := float64(count) / bufferLen
+		entropy += -p * math.Log2(p)
 	}
 
-	// Calculate weighted average
-	averageEntropy := weightedEntropy / float64(totalSize)
-
-	// Validate final result
-	if averageEntropy < 0 || averageEntropy > 8 {
-		log.Printf("Warning: Invalid weighted average entropy: %f, adjusting to valid range", averageEntropy)
-		return math.Min(8, math.Max(0, averageEntropy))
-	}
-
-	return averageEntropy
+	return entropy
 }
 
 // CalculateSectionEntropy function
