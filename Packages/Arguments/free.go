@@ -1,15 +1,14 @@
 package Arguments
 
 import (
+	"SugarFree/Packages/Calculate"
 	"SugarFree/Packages/Colors"
-	"SugarFree/Packages/Entropy"
-	"SugarFree/Packages/Graph"
-	"SugarFree/Packages/Manager"
-	"SugarFree/Packages/Output"
+	"SugarFree/Packages/Reduce"
 	"SugarFree/Packages/Utils"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -19,8 +18,8 @@ import (
 var freeArgument = &cobra.Command{
 	// Use defines how the command should be called.
 	Use:          "free",
-	Short:        "Reduce and analyze file entropy",
-	Long:         "Analyze and optionally reduce entropy in PE files while maintaining functionality",
+	Short:        "Free command",
+	Long:         "Lowers the overall entropy of a PE file",
 	SilenceUsage: true,
 	Aliases:      []string{"FREE", "Free"},
 
@@ -41,18 +40,26 @@ var freeArgument = &cobra.Command{
 			os.Exit(0)
 		}
 
-		// Get command line flags
+		// Define variables
+		var entropy string
+
+		// Get variables from the command line
 		file, _ := cmd.Flags().GetString("file")
-		output, _ := cmd.Flags().GetString("output")
+		minimum, _ := cmd.Flags().GetFloat64("minimum")
 		graph, _ := cmd.Flags().GetBool("graph")
 
-		// Validate input file
+		// Check if the file flag is empty
 		if file == "" {
-			logger.Fatal("Error: Input file is missing. Please provide it to continue...\n")
+			logger.Fatal("Error: Input file is missing. Please provide it to continue...\n\n")
 		}
 
 		// Record start time for performance measurement
-		startTime := time.Now()
+		reductionStartTime := time.Now()
+
+		// Get the current date and time
+		getDateTime := time.Now().Format("2006-01-02 15:04:05")
+
+		fmt.Printf("[*] Starting PE entropy reduction on %s\n\n", Colors.BoldWhite(getDateTime))
 
 		// Get absolute file path
 		filePath, err := Utils.GetAbsolutePath(file)
@@ -66,69 +73,53 @@ var freeArgument = &cobra.Command{
 			logger.Fatal("Error: ", err)
 		}
 
-		// Read PE sections and calculate initial entropy
-		fmt.Printf("[+] Analyzing the PE file: %s\n", Colors.BoldGreen(file))
-		fmt.Printf("[+] Initial file size: %s bytes\n", Colors.BoldYellow(fileSize))
+		// Get filename and extension
+		fileName, fileExtension := Utils.SplitFileName(file)
 
-		sections, err := Manager.ReadSections(filePath)
+		fmt.Printf("[+] Analyzing PE File: %s\n", Colors.BoldCyan(file))
+		fmt.Printf("[+] Initial File Size: %s KB\n", Colors.BoldYellow(fileSize))
+
+		// Call function named ReadSections
+		sections, err := Calculate.ReadSections(filePath)
 		if err != nil {
-			logger.Fatal("Error: ", err)
+			log.Fatal(err)
 		}
 
-		// Calculate and display initial entropy
-		initialEntropy := Manager.FullEntropy(sections)
-		fmt.Printf("[+] Initial PE entropy: %s\n", Colors.BoldCyan(fmt.Sprintf("%.5f", initialEntropy)))
+		// Call function named FullEntropy
+		initialEntropy := Calculate.CalculateFullEntropy(sections)
 
-		// Process sections for entropy reduction
-		reducedSections, err := Entropy.ReduceEntropy(filePath, Entropy.ReductionStrategy{Aggressive: true})
+		// Display initial overall PE entropy
+		fmt.Printf("[+] Initial Overall PE Entropy: %s\n\n", Colors.CalculateColor2Entropy(initialEntropy))
+
+		// Call function named ReduceEntropy
+		reduceSections, err := Reduce.ReduceEntropy(filePath, Reduce.ReductionStrategy{Aggressive: true})
 		if err != nil {
 			logger.Fatal("Error during entropy reduction: ", err)
 		}
 
-		// Calculate and display final entropy
-		finalEntropy := Manager.FullEntropy(reducedSections)
-		fmt.Printf("[+] Final PE entropy: %s\n", Colors.BoldGreen(fmt.Sprintf("%.5f", finalEntropy)))
-
-		// Display entropy reduction percentage
+		finalEntropy := Calculate.CalculateFullEntropy(reduceSections)
+		fmt.Printf("[+] Staged Reduction - Overall PE Entropy: %s\n", Colors.CalculateColor2Entropy(finalEntropy))
 		reductionPercentage := ((initialEntropy - finalEntropy) / initialEntropy) * 100
-		fmt.Printf("[+] Entropy reduction: %s%%\n", Colors.BoldYellow(fmt.Sprintf("%.2f", reductionPercentage)))
+		fmt.Printf("[+] Entropy Reduction Percentage: %s%%\n", Colors.BoldBlue(fmt.Sprintf("%.2f", reductionPercentage)))
 
-		// Generate entropy visualization if requested
-		if graph {
-			fmt.Print("[+] Generating entropy visualization graph...\n")
-			graphPath := file + "_entropy_graph.png"
-			err = Graph.GenerateEntropyGraph(sections, reducedSections, graphPath)
-			if err != nil {
-				logger.Printf("Warning: Failed to generate entropy graph: %v\n", err)
-			} else {
-				fmt.Printf("[+] Entropy graph saved to: %s\n", Colors.BoldGreen(graphPath))
-			}
-		}
+		// Convert float to string
+		entropy = strconv.FormatFloat(finalEntropy, 'f', -1, 64)
 
-		// Save results to output file if specified
-		if output != "" {
-			outputPath, err := Utils.GetAbsolutePath(output)
-			if err != nil {
-				logger.Fatal("Error: ", err)
-			}
+		// Call function named BuildNewName
+		newFileName := Utils.BuildNewName(fileName, fileExtension, entropy)
 
-			// Convert to Output.Section format
-			var outputSections []Output.Section
-			for _, section := range reducedSections {
-				outputSections = append(outputSections, Output.Section{
-					Name:    section.Name,
-					Entropy: section.Entropy,
-				})
-			}
+		fmt.Printf("[+] Saved to: %s\n\n", Colors.BoldCyan(newFileName))
 
-			// Write results to file
-			Output.WriteEntropyReport(outputSections, outputPath, file, fileSize, initialEntropy, finalEntropy)
-			fmt.Printf("\n[+] Results saved to: %s\n", Colors.BoldGreen(outputPath))
-		}
+		// Record the end time
+		reductionEndTime := time.Now()
 
-		// Display execution time
-		duration := time.Since(startTime)
-		fmt.Printf("\n[+] Completed in: %s\n\n", Colors.BoldWhite(duration))
+		// Calculate the duration
+		reductionDurationTime := reductionEndTime.Sub(reductionStartTime)
+
+		fmt.Printf("[*] Completed in: %s\n\n", Colors.BoldWhite(reductionDurationTime))
+
+		//////// To be removed //////////
+		fmt.Print(minimum, graph)
 
 		return nil
 	},

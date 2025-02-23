@@ -1,8 +1,7 @@
-// Package Entropy provides enhanced entropy reduction capabilities for PE files
-package Entropy
+package Reduce
 
 import (
-	"SugarFree/Packages/Manager"
+	"SugarFree/Packages/Calculate"
 	"SugarFree/Packages/WordList"
 	"bytes"
 	"debug/pe"
@@ -66,7 +65,7 @@ func calculateMaxWordLength(data []byte, startPos int) int {
 // ReduceEntropy processes a PE file and attempts to reduce its entropy while
 // maintaining functionality. It employs multiple advanced strategies including
 // smart padding, context-aware word injection, and section-specific optimizations.
-func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Manager.SectionEntropy, error) {
+func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Calculate.SectionEntropy, error) {
 	// Open file for reading and writing
 	file, err := os.OpenFile(filePath, os.O_RDWR, 0)
 	if err != nil {
@@ -80,7 +79,7 @@ func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Manager.Secti
 		return nil, fmt.Errorf("failed to parse PE file: %w", err)
 	}
 
-	var reducedSections []Manager.SectionEntropy
+	var reducedSections []Calculate.SectionEntropy
 	var totalSize int64
 
 	// First pass: analyze sections and calculate total size
@@ -105,7 +104,7 @@ func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Manager.Secti
 		}
 
 		// Calculate initial entropy
-		initialEntropy := Manager.CalculateEntropy(sectionData)
+		initialEntropy := Calculate.CalculateSectionEntropy(sectionData)
 
 		// Process section based on its characteristics and content
 		processedData := processSection(
@@ -133,7 +132,7 @@ func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Manager.Secti
 		}
 
 		// Apply pattern breaking if entropy is still high
-		newEntropy := Manager.CalculateEntropy(processedData)
+		newEntropy := Calculate.CalculateSectionEntropy(processedData)
 		if newEntropy > strategy.TargetEntropy && strategy.Aggressive {
 			processedData = applyPatternBreaking(
 				processedData,
@@ -151,9 +150,9 @@ func ReduceEntropy(filePath string, strategy ReductionStrategy) ([]Manager.Secti
 		}
 
 		// Update section info
-		reducedSections = append(reducedSections, Manager.SectionEntropy{
+		reducedSections = append(reducedSections, Calculate.SectionEntropy{
 			Name:    string(section.Name),
-			Entropy: Manager.CalculateEntropy(processedData),
+			Entropy: Calculate.CalculateSectionEntropy(processedData),
 			Size:    int64(len(processedData)),
 			Offset:  int64(section.Offset),
 		})
