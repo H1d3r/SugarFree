@@ -1,8 +1,8 @@
 package Arguments
 
 import (
+	"SugarFree/Packages/Calculate"
 	"SugarFree/Packages/Colors"
-	"SugarFree/Packages/Manager"
 	"SugarFree/Packages/Output"
 	"SugarFree/Packages/Utils"
 	"fmt"
@@ -17,7 +17,8 @@ import (
 var infoArgument = &cobra.Command{
 	// Use defines how the command should be called.
 	Use:          "info",
-	Short:        "info command",
+	Short:        "Info command",
+	Long:         "Calculates the entropy of a PE file and its sections",
 	SilenceUsage: true,
 	Aliases:      []string{"INFO", "Info"},
 
@@ -44,17 +45,22 @@ var infoArgument = &cobra.Command{
 		// Define variables
 		var sectionEntropy string
 
-		// Get variables from the command line.
+		// Get variables from the command line
 		file, _ := cmd.Flags().GetString("file")
 		output, _ := cmd.Flags().GetString("output")
 
-		// Check if the file flag is empty.
+		// Check if the file flag is empty
 		if file == "" {
-			logger.Fatal("Error: Input file is missing. Please provide it to continue...\n")
+			logger.Fatal("Error: Input file is missing. Please provide it to continue...\n\n")
 		}
 
 		// Record the start time
 		calculateStartTime := time.Now()
+
+		// Get the current date and time
+		getDateTime := time.Now().Format("2006-01-02 15:04:05")
+
+		fmt.Printf("[*] Starting PE analysis on %s\n\n", Colors.BoldWhite(getDateTime))
 
 		// Call function named GetAbsolutePath
 		filePath, err := Utils.GetAbsolutePath(file)
@@ -69,12 +75,12 @@ var infoArgument = &cobra.Command{
 		}
 
 		// Call function named ReadSections
-		sections, err := Manager.ReadSections(filePath)
+		sections, err := Calculate.ReadSections(filePath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Convert Manager.SectionEntropy to Output.Section
+		// Convert Calcualte.SectionEntropy to Output.Section
 		var outputSections []Output.Section
 		for _, section := range sections {
 			outputSections = append(outputSections, Output.Section{
@@ -83,31 +89,34 @@ var infoArgument = &cobra.Command{
 			})
 		}
 
-		// Call function named FullEntropy
-		fullEntropy := Manager.FullEntropy(sections)
+		// Read the file
+		buf, err := os.ReadFile(file)
+		if err != nil {
+			logger.Fatal("Error: ", err)
+		}
 
-		fmt.Printf("[+] Analyzing the PE file: %s\n", Colors.BoldGreen(file))
-		fmt.Printf("[+] File Size: %s bytes\n", Colors.BoldYellow(fileSize))
-		fmt.Printf("[+] Full PE Entropy: %s\n", Colors.BoldCyan(fmt.Sprintf("%.5f", fullEntropy)))
-		fmt.Print("[+] PE Sections and their entropy:\n")
+		fullEntropy := Calculate.CalculateFullEntropy(buf)
+
+		// Print the results
+		fmt.Printf("[+] Analyzing PE File: %s\n", Colors.BoldCyan(file))
+		fmt.Printf("[+] File Size: %s KB\n", Colors.BoldYellow(fileSize))
+		fmt.Printf("[+] Overall PE Entropy: %s\n\n", Colors.CalculateColor2Entropy(fullEntropy))
+		fmt.Print("[+] PE Sections Entropy:\n")
 		for _, section := range sections {
 			// Call function ColorManager
-			sectionName := Manager.ColorNameManager(section.Name)
+			sectionName := Colors.ColorNameManager(section.Name)
 
-			// Check if the entropy is less than 5.0
-			if section.Entropy < 5.0 {
-				sectionEntropy = Colors.BoldGreen(fmt.Sprintf("%.5f", section.Entropy))
-			} else {
-				sectionEntropy = Colors.BoldRed(fmt.Sprintf("%.5f", section.Entropy))
-			}
+			// Call function named CalculateColor2Entropy
+			sectionEntropy = Colors.CalculateColor2Entropy(section.Entropy)
 
+			// Print the results
 			fmt.Printf("	>>> \"%s\" Scored Entropy Of Value: %s\n", sectionName, sectionEntropy)
 		}
 
 		// Check if the output flag is empty.
 		if output != "" {
 			// Call function named WriteToFile
-			Output.WriteToFile(outputSections, output, file, fileSize, fullEntropy)
+			Output.Write2File(outputSections, output, file, fileSize, fullEntropy, getDateTime)
 
 			// Call function named GetAbsolutePath
 			outputFilePath, err := Utils.GetAbsolutePath(output)
@@ -115,7 +124,7 @@ var infoArgument = &cobra.Command{
 				logger.Fatal("Error: ", err)
 			}
 
-			fmt.Printf("\n[+] Results saved to: %s\n", Colors.BoldGreen(outputFilePath))
+			fmt.Printf("\n[+] Results saved to: %s\n", Colors.BoldCyan(outputFilePath))
 		}
 
 		// Record the end time
@@ -125,7 +134,7 @@ var infoArgument = &cobra.Command{
 		calculateDurationTime := calculateEndTime.Sub(calculateStartTime)
 
 		// Print the duration
-		fmt.Printf("\n[+] Completed in: %s\n\n", Colors.BoldWhite(calculateDurationTime))
+		fmt.Printf("\n[*] Completed in: %s\n\n", Colors.BoldWhite(calculateDurationTime))
 
 		return nil
 	},

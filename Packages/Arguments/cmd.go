@@ -37,7 +37,7 @@ Please visit %s for more...
 		Use:          "SugarFree",
 		SilenceUsage: true,
 		RunE:         StartSugarFree,
-		Aliases:      []string{"sugarfree", "SUgarFree", "sugarFree", "sugarfree", "sf"},
+		Aliases:      []string{"sugarfree", "SUGARFREE", "sf"},
 	}
 )
 
@@ -69,8 +69,8 @@ func init() {
 	// Add flags to the 'free' command.
 	freeArgument.Flags().SortFlags = true
 	freeArgument.Flags().StringP("file", "f", "", "Set input file")
-	freeArgument.Flags().StringP("output", "o", "", "Save results to output file")
-	freeArgument.Flags().BoolP("graph", "g", false, "Create a entropy graph image")
+	freeArgument.Flags().Float64P("minimum", "m", 4.9, "Set minimum entropy value")
+	freeArgument.Flags().BoolP("graph", "g", false, "Enable entropy graph")
 }
 
 // ShowVersion function
