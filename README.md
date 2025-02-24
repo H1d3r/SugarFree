@@ -3,7 +3,7 @@
 Less sugar (entropy) for your binaries
 
 <p align="center">
-  <img width="450" height="400" src="/Pictures/logo3.png"><br /><br />
+  <img width="450" height="400" src="/Pictures/Logo.png"><br /><br />
   <!--<img alt="GitHub License" src="https://img.shields.io/github/license/nickvourd/SugarFree?style=social&logo=GitHub&logoColor=purple">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/nickvourd/SugarFree?logoColor=yellow">
   <img alt="GitHub forks" src="https://img.shields.io/github/forks/nickvourd/SugarFree?logoColor=red">
