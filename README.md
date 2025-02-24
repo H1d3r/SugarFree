@@ -74,6 +74,8 @@ go build SugarFree
 
 ## Usage
 
+:information_source: Please refer to the [SugarFree Wiki](https://github.com/nickvourd/SugarFree/wiki) for detailed usage instructions and examples of commands.
+
 ```
 ███████╗██╗   ██╗ ██████╗  █████╗ ██████╗ ███████╗██████╗ ███████╗███████╗
 ██╔════╝██║   ██║██╔════╝ ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝
