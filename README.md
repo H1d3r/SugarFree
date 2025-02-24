@@ -74,4 +74,34 @@ go build SugarFree
 
 ## Usage
 
+```
+███████╗██╗   ██╗ ██████╗  █████╗ ██████╗ ███████╗██████╗ ███████╗███████╗
+██╔════╝██║   ██║██╔════╝ ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝
+███████╗██║   ██║██║  ███╗███████║██████╔╝█████╗  ██████╔╝█████╗  █████╗  
+╚════██║██║   ██║██║   ██║██╔══██║██╔══██╗██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  
+███████║╚██████╔╝╚██████╔╝██║  ██║██║  ██║██║     ██║  ██║███████╗███████╗
+╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝                                                        
+
+SugarFree v1.0 - Less sugar (entropy) for your binaries.
+SugarFree is an open source tool licensed under MIT.
+Written with <3 by @nickvourd && @IAMCOMPROMISED...
+Please visit https://github.com/nickvourd/SugarFree for more...
+
+Usage:
+  SugarFree [flags]
+  SugarFree [command]
+
+Aliases:
+  SugarFree, sugarfree, SUGARFREE, sf
+
+Available Commands:
+  free        Free command
+  help        Help about any command
+  info        Info command
+
+Flags:
+  -h, --help      help for SugarFree
+  -v, --version   Show SugarFree current version
+```
+
 ## References
