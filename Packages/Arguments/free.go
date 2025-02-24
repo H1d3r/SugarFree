@@ -6,6 +6,7 @@ import (
 	"SugarFree/Packages/Reduce"
 	"SugarFree/Packages/Utils"
 	"fmt"
+	"image/color"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,7 +14,16 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/vg"
 )
+
+// StageData represents data for each reduction stage
+type StageData struct {
+	stage   int
+	entropy float64
+}
 
 // freeArgument represents the 'free' command in the CLI.
 var freeArgument = &cobra.Command{
@@ -90,6 +100,11 @@ var freeArgument = &cobra.Command{
 		// Display initial overall PE entropy
 		fmt.Printf("[+] Initial Overall PE Entropy: %s\n", Colors.CalculateColor2Entropy(initialEntropy))
 
+		// Create a slice to store entropy values for each stage
+		stageData := []StageData{
+			{0, initialEntropy}, // Include initial entropy as stage 0
+		}
+
 		// Copy the original data
 		modifiedData := make([]byte, len(originalData))
 		copy(modifiedData, originalData)
@@ -116,6 +131,12 @@ var freeArgument = &cobra.Command{
 			// Calculate and display progress for this iteration
 			iterationCount++
 
+			// Store stage data for graphing
+			stageData = append(stageData, StageData{
+				stage:   iterationCount,
+				entropy: currentEntropy,
+			})
+
 			// Convert current entropy to string for filename
 			stageEntropy := strconv.FormatFloat(currentEntropy, 'f', 5, 64)
 
@@ -131,7 +152,7 @@ var freeArgument = &cobra.Command{
 			// Get file size for the new file
 			newFileSize, err := Utils.GetFileSize(stageFileName)
 			if err != nil {
-				logger.Printf("Error getting file size: %v\n", err)
+				logger.Fatalf("[!] Error getting file size: %v\n", err)
 				continue
 			}
 
@@ -165,7 +186,7 @@ var freeArgument = &cobra.Command{
 			// Get absolute path for stage file
 			stageFileName, err = Utils.GetAbsolutePath(stageFileName)
 			if err != nil {
-				logger.Printf("Error getting absolute path for stage file: %v\n", err)
+				logger.Fatalf("[!] Error getting absolute path for stage file: %v\n", err)
 				continue
 			}
 
@@ -187,7 +208,49 @@ var freeArgument = &cobra.Command{
 
 		// If graph flag is enabled
 		if graph {
+			// Create a new plot
+			p := plot.New()
 
+			p.Title.Text = "Entropy Reduction Stages"
+			p.X.Label.Text = "Stage"
+			p.Y.Label.Text = "Entropy"
+
+			// Create points for the line
+			pts := make(plotter.XYs, len(stageData))
+			for i, data := range stageData {
+				pts[i].X = float64(data.stage)
+				pts[i].Y = data.entropy
+			}
+
+			// Create a line plotter and set its style
+			line, err := plotter.NewLine(pts)
+			if err != nil {
+				logger.Fatalf("\n[!] Error creating line plot: %v\n", err)
+			} else {
+				line.Color = color.RGBA{R: 255, B: 0, A: 255}
+				line.Width = vg.Points(2)
+				p.Add(line)
+
+				// Add scatter points
+				scatter, err := plotter.NewScatter(pts)
+				if err != nil {
+					logger.Fatalf("\n[!] Error creating scatter plot: %v\n", err)
+				} else {
+					scatter.GlyphStyle.Color = color.RGBA{B: 255, A: 255}
+					scatter.GlyphStyle.Radius = vg.Points(4)
+					p.Add(scatter)
+
+					getDateTime = time.Now().Format("20060102-150405")
+
+					// Save the plot to a PNG file
+					outputFile := fmt.Sprintf("%s_Entropy_Reduction_%s.png", fileName, getDateTime)
+					if err := p.Save(8*vg.Inch, 6*vg.Inch, outputFile); err != nil {
+						logger.Fatalf("\n[!] Error saving plot: %v\n", err)
+					} else {
+						fmt.Printf("\n[+] Entropy reduction graph saved to: %s\n", Colors.BoldYellow(outputFile))
+					}
+				}
+			}
 		}
 
 		// Record the end time
