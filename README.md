@@ -22,20 +22,23 @@ The following list explains the meaning of each SugarFree command:
 
 SugarFree is written in Golang, a cross-platform language, enabling its use on both Windows and Linux systems.
 
-This project created with :heart: by [@nickvourd](https://x.com/nickvourd) && [@IAMCOMPROMISED](https://x.com/IAMCOMPROMISED).
-
-Special thanks to my friend [Marios Gyftos](https://www.linkedin.com/in/marios-gyftos-a6b62122/) for inspiring the concept of automated stages.
-
 > If you find any bugs, don’t hesitate to [report them](https://github.com/nickvourd/SugarFree/issues). Your feedback is valuable in improving the quality of this project!
 
 ## Disclaimer
 
 The authors and contributors of this project are not liable for any illegal use of the tool. It is intended for educational purposes only. Users are responsible for ensuring lawful usage.
 
+## Acknowledgement
+
+This project created with :heart: by [@nickvourd](https://x.com/nickvourd) && [@IAMCOMPROMISED](https://x.com/IAMCOMPROMISED).
+
+Special thanks to my friend [Marios Gyftos](https://www.linkedin.com/in/marios-gyftos-a6b62122/) for inspiring the concept of automated stages.
+
 ## Table of Contents
 - [SugarFree](#sugarfree)
   - [Description](#description)
   - [Disclaimer](#disclaimer)
+  - [Acknowledgement](#acknowledgement)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
