@@ -10,6 +10,7 @@
 *.txt
 *.dll
 *.exe
+*SugarFree
 
 # Test binary, built with `go test -c`
 *.test
