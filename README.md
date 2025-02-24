@@ -26,9 +26,16 @@ This project created with :heart: by [@nickvourd](https://x.com/nickvourd) && [@
 
 Special thanks to my friend [Marios Gyftos](https://www.linkedin.com/in/marios-gyftos-a6b62122/) for inspiring the concept of automated stages.
 
+> If you find any bugs, don’t hesitate to [report them](https://github.com/nickvourd/SugarFree/issues). Your feedback is valuable in improving the quality of this project!
+
+## Disclaimer
+
+The authors and contributors of this project are not liable for any illegal use of the tool. It is intended for educational purposes only. Users are responsible for ensuring lawful usage.
+
 ## Table of Contents
 - [SugarFree](#sugarfree)
   - [Description](#description)
+  - [Disclaimer](#disclaimer)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -36,3 +43,32 @@ Special thanks to my friend [Marios Gyftos](https://www.linkedin.com/in/marios-g
 
 ## Installation
 
+You can use the [precompiled binaries](https://github.com/nickvourd/SugarFree/releases), or you can manually install SugarFree by following the next steps:
+
+1) Clone the repository by executing the following command:
+
+```
+git clone https://github.com/nickvourd/SugarFree.git
+```
+
+2) Once the repository is cloned, navigate into the SugarFree directory:
+
+```
+cd SugarFree
+```
+
+3) Install the third-party dependencies:
+
+```
+go mod download
+```
+
+4) Build SugarFree with the following command:
+
+```
+go build SugarFree
+```
+
+## Usage
+
+## References
