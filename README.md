@@ -5,7 +5,6 @@ Less sugar (entropy) for your binaries
 <p align="center">
   <img width="450" height="450" src="/Pictures/Logo.png"><br /><br />
   <!--<img alt="GitHub License" src="https://img.shields.io/github/license/nickvourd/SugarFree?style=social&logo=GitHub&logoColor=purple">
-   <img alt="Static Badge" src="https://img.shields.io/badge/Version-1.0%20(Zero Calories)-red?link=https%3A%2F%2Fgithub.com%2Fnickvourd%2FSugarFree%2Freleases">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/nickvourd/SugarFree?logoColor=yellow">
   <img alt="GitHub forks" src="https://img.shields.io/github/forks/nickvourd/SugarFree?logoColor=red">
   <img alt="GitHub watchers" src="https://img.shields.io/github/watchers/nickvourd/SugarFree?logoColor=blue">
@@ -15,6 +14,8 @@ Less sugar (entropy) for your binaries
 ## Description
 
 SugarFree is an open-source tool designed to analyze and reduce the entropy of a provided PE file. SugarFree appends null bytes (`0x00`) to the end of the file, increasing the binary size while reducing its entropy.
+
+![Static Badge](https://img.shields.io/badge/Version-1.0%20(Zero%20Calories)-red?link=https%3A%2F%2Fgithub.com%2Fnickvourd%2FSugarFree%2Freleases")
 
 The following list explains the meaning of each SugarFree command:
 
