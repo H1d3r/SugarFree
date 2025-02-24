@@ -43,7 +43,7 @@ var freeArgument = &cobra.Command{
 
 		// Get variables from the command line
 		file, _ := cmd.Flags().GetString("file")
-		minimum, _ := cmd.Flags().GetFloat64("minimum")
+		target, _ := cmd.Flags().GetFloat64("target")
 		graph, _ := cmd.Flags().GetBool("graph")
 
 		// Check if the file flag is empty
@@ -101,8 +101,8 @@ var freeArgument = &cobra.Command{
 		stuckCount := 0
 		maxIterations := 10 // Maximum number of iterations to prevent infinite loops
 
-		// Loop until we reach minimum entropy or can't reduce further
-		for currentEntropy > minimum && iterationCount < maxIterations {
+		// Loop until we reach target entropy or can't reduce further
+		for currentEntropy > target && iterationCount < maxIterations {
 			// Call function named ApplyStrategy
 			modifiedData = Reduce.ApplyStrategy(modifiedData, 60000)
 
@@ -185,6 +185,11 @@ var freeArgument = &cobra.Command{
 			lastEntropy = currentEntropy
 		}
 
+		// If graph flag is enabled
+		if graph {
+
+		}
+
 		// Record the end time
 		reductionEndTime := time.Now()
 
@@ -192,9 +197,6 @@ var freeArgument = &cobra.Command{
 		reductionDurationTime := reductionEndTime.Sub(reductionStartTime)
 
 		fmt.Printf("\n[*] Completed in: %s\n\n", Colors.BoldWhite(reductionDurationTime))
-
-		// Keep graph parameter for future use
-		_ = graph
 
 		return nil
 	},
