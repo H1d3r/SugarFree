@@ -5,7 +5,7 @@ Less sugar (entropy) for your binaries
 <p align="center">
   <img width="450" height="450" src="/Pictures/Logo.png"><br /><br />
   <!--<img alt="GitHub License" src="https://img.shields.io/github/license/nickvourd/SugarFree?style=social&logo=GitHub&logoColor=purple">
-  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/nickvourd/SugarFree?logoColor=yellow">
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/nickvourd/SugarFree?logoColor=yellow"><br />
   <img alt="GitHub forks" src="https://img.shields.io/github/forks/nickvourd/SugarFree?logoColor=red">
   <img alt="GitHub watchers" src="https://img.shields.io/github/watchers/nickvourd/SugarFree?logoColor=blue">
   <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/nickvourd/SugarFree?style=social&logo=GitHub&logoColor=green">-->
@@ -28,21 +28,21 @@ SugarFree is written in Golang, a cross-platform language, enabling its use on b
 
 The authors and contributors of this project are not liable for any illegal use of the tool. It is intended for educational purposes only. Users are responsible for ensuring lawful usage.
 
+## Table of Contents
+- [SugarFree](#sugarfree)
+  - [Description](#description)
+  - [Disclaimer](#disclaimer)
+  - [Table of Contents](#table-of-contents)
+  - [Acknowledgement](#acknowledgement)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [References](#references)
+
 ## Acknowledgement
 
 This project created with :heart: by [@nickvourd](https://x.com/nickvourd) && [@IAMCOMPROMISED](https://x.com/IAMCOMPROMISED).
 
 Special thanks to my friend [Marios Gyftos](https://www.linkedin.com/in/marios-gyftos-a6b62122/) for inspiring the concept of automated stages.
-
-## Table of Contents
-- [SugarFree](#sugarfree)
-  - [Description](#description)
-  - [Disclaimer](#disclaimer)
-  - [Acknowledgement](#acknowledgement)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [References](#references)
 
 ## Installation
 
