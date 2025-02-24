@@ -110,3 +110,8 @@ Flags:
 ```
 
 ## References
+
+- [Threat Hunting with File Entropy by Practical Security Analytics LLC](https://practicalsecurityanalytics.com/file-entropy/)
+- [Using Entropy in Threat Hunting: a Mathematical Search for the Unknown by Red Canary](https://redcanary.com/blog/threat-detection/threat-hunting-entropy/)
+- [EntropyReducer GitHub by Maldev Academy](https://github.com/Maldev-Academy/EntropyReducer)
+- [EntropyFix GitHub by EspressoCake](https://github.com/EspressoCake/EntropyFix)
