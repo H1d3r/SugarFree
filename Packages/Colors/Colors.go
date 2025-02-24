@@ -16,13 +16,13 @@ var (
 	BoldGreen   = color.New(color.FgGreen, color.Bold).SprintFunc()
 	BoldYellow  = color.New(color.FgYellow, color.Bold).SprintFunc()
 	BoldWhite   = color.New(color.FgHiWhite, color.Bold).SprintFunc()
-	BoldMagneta = color.New(color.FgMagenta, color.Bold).SprintFunc()
+	BoldMagenta = color.New(color.FgMagenta, color.Bold).SprintFunc()
 	BoldCyan    = color.New(color.FgCyan, color.Bold).SprintFunc()
 )
 
 // Define a slice containing all available color functions
 var allColors = []func(a ...interface{}) string{
-	BoldBlue, BoldRed, BoldGreen, BoldYellow, BoldWhite, BoldMagneta, BoldCyan,
+	BoldBlue, BoldRed, BoldGreen, BoldYellow, BoldWhite, BoldMagenta, BoldCyan,
 }
 
 // RandomColor function
@@ -39,7 +39,7 @@ func ColorNameManager(section string) string {
 	case ".text":
 		return BoldYellow(section) // Code section
 	case ".data":
-		return BoldMagneta(section) // Data section
+		return BoldMagenta(section) // Data section
 	case ".rdata":
 		return BoldBlue(section) // Read-only data
 	case ".pdata":
@@ -49,7 +49,7 @@ func ColorNameManager(section string) string {
 	case ".idata":
 		return BoldYellow(section) // Import directory
 	case ".edata":
-		return BoldMagneta(section) // Export directory
+		return BoldMagenta(section) // Export directory
 	case ".rsrc":
 		return BoldBlue(section) // Resources
 	case ".tls":
@@ -59,7 +59,7 @@ func ColorNameManager(section string) string {
 	case ".debug":
 		return BoldYellow(section) // Debug information
 	case ".xdata":
-		return BoldMagneta(section) // Exception information
+		return BoldMagenta(section) // Exception information
 	default:
 		return BoldBlue(section) // Unknown sections
 	}

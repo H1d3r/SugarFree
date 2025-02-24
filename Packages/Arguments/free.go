@@ -41,9 +41,6 @@ var freeArgument = &cobra.Command{
 			os.Exit(0)
 		}
 
-		// Define variables
-		//var entropy string
-
 		// Get variables from the command line
 		file, _ := cmd.Flags().GetString("file")
 		minimum, _ := cmd.Flags().GetFloat64("minimum")
@@ -87,44 +84,106 @@ var freeArgument = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Call function named CalculateFullEntropy
+		// Calculate initial entropy
 		initialEntropy := Calculate.CalculateFullEntropy(originalData)
 
 		// Display initial overall PE entropy
-		fmt.Printf("[+] Initial Overall PE Entropy: %s\n\n", Colors.CalculateColor2Entropy(initialEntropy))
+		fmt.Printf("[+] Initial Overall PE Entropy: %s\n", Colors.CalculateColor2Entropy(initialEntropy))
 
 		// Copy the original data
 		modifiedData := make([]byte, len(originalData))
 		copy(modifiedData, originalData)
 
-		// Call function named ApplyStrategy
-		modifiedData = Reduce.ApplyStrategy(modifiedData, 60000)
+		// Add variables to track progress
+		currentEntropy := initialEntropy
+		iterationCount := 0
+		lastEntropy := currentEntropy
+		stuckCount := 0
+		maxIterations := 10 // Maximum number of iterations to prevent infinite loops
 
-		finalEntropy := Calculate.CalculateFullEntropy(modifiedData)
-		fmt.Printf("[+] Staged Reduction - Overall PE Entropy: %s\n", Colors.CalculateColor2Entropy(finalEntropy))
-		reductionPercentage := ((initialEntropy - finalEntropy) / initialEntropy) * 100
-		fmt.Printf("[+] Entropy Reduction Percentage: %s%%\n", Colors.BoldBlue(fmt.Sprintf("%.2f", reductionPercentage)))
+		// Loop until we reach minimum entropy or can't reduce further
+		for currentEntropy > minimum && iterationCount < maxIterations {
+			// Call function named ApplyStrategy
+			modifiedData = Reduce.ApplyStrategy(modifiedData, 60000)
 
-		// Convert float to string
-		entropy := strconv.FormatFloat(finalEntropy, 'f', -1, 64)
+			// Calculate new entropy
+			currentEntropy = Calculate.CalculateFullEntropy(modifiedData)
 
-		// Call function named BuildNewName
-		newFileName := Utils.BuildNewName(fileName, fileExtension, entropy)
+			// Calculate reduction percentages
+			totalReductionPercentage := ((initialEntropy - currentEntropy) / initialEntropy) * 100
+			stageReductionPercentage := ((lastEntropy - currentEntropy) / lastEntropy) * 100
 
-		// Write modified data to output file
-		if err := ioutil.WriteFile(newFileName, modifiedData, 0644); err != nil {
-			fmt.Printf("[!] Error writing output file: %v\n", err)
-			os.Exit(1)
+			// Calculate and display progress for this iteration
+			iterationCount++
+
+			// Convert current entropy to string for filename
+			stageEntropy := strconv.FormatFloat(currentEntropy, 'f', 5, 64)
+
+			// Build new filename for this stage
+			stageFileName := Utils.BuildNewName(fileName, fileExtension, stageEntropy)
+
+			// Write stage data to output file
+			if err := ioutil.WriteFile(stageFileName, modifiedData, 0644); err != nil {
+				fmt.Printf("[!] Error writing stage file: %v\n", err)
+				continue
+			}
+
+			// Get file size for the new file
+			newFileSize, err := Utils.GetFileSize(stageFileName)
+			if err != nil {
+				logger.Printf("Error getting file size: %v\n", err)
+				continue
+			}
+
+			if iterationCount == 1 {
+				// For first stage, show entropy and current reduction percentage
+				fmt.Printf("\n[+] Stage %d Reduction - Overall PE Entropy: %s\n",
+					iterationCount,
+					Colors.CalculateColor2Entropy(currentEntropy))
+				fmt.Printf("[+] Stage %d Current Reduction Percentage: %s%%\n",
+					iterationCount,
+					Colors.BoldMagenta(fmt.Sprintf("%.2f", stageReductionPercentage)))
+				fmt.Printf("[+] Stage %d File Size: %s KB\n",
+					iterationCount,
+					Colors.BoldYellow(newFileSize))
+			} else {
+				// For subsequent stages, show all messages in desired order
+				fmt.Printf("\n[+] Stage %d Reduction - Overall PE Entropy: %s\n",
+					iterationCount,
+					Colors.CalculateColor2Entropy(currentEntropy))
+				fmt.Printf("[+] Stage %d Current Reduction Percentage: %s%%\n",
+					iterationCount,
+					Colors.BoldMagenta(fmt.Sprintf("%.2f", stageReductionPercentage)))
+				fmt.Printf("[+] Stage %d File Size: %s KB\n",
+					iterationCount,
+					Colors.BoldYellow(newFileSize))
+				fmt.Printf("[+] Stage %d Total Reduction Percentage: %s%%\n",
+					iterationCount,
+					Colors.BoldBlue(fmt.Sprintf("%.2f", totalReductionPercentage)))
+			}
+
+			// Get absolute path for stage file
+			stageFileName, err = Utils.GetAbsolutePath(stageFileName)
+			if err != nil {
+				logger.Printf("Error getting absolute path for stage file: %v\n", err)
+				continue
+			}
+
+			fmt.Printf("[+] Stage %d saved to: %s\n", iterationCount, Colors.BoldCyan(stageFileName))
+
+			// Check if we're stuck (entropy isn't decreasing significantly)
+			if lastEntropy-currentEntropy < 0.0001 {
+				stuckCount++
+				if stuckCount >= 3 { // If stuck for 3 iterations, break
+					fmt.Printf("\n[!] Entropy reduction plateaued after %d stages\n", iterationCount)
+					break
+				}
+			} else {
+				stuckCount = 0
+			}
+
+			lastEntropy = currentEntropy
 		}
-
-		// Call function named GetAbsoluteFilePath
-		newFileName, err = Utils.GetAbsolutePath(newFileName)
-		if err != nil {
-			logger.Fatal("Error: ", err)
-		}
-
-		// Display the new file name
-		fmt.Printf("[+] Saved to: %s\n\n", Colors.BoldCyan(newFileName))
 
 		// Record the end time
 		reductionEndTime := time.Now()
@@ -132,10 +191,10 @@ var freeArgument = &cobra.Command{
 		// Calculate the duration
 		reductionDurationTime := reductionEndTime.Sub(reductionStartTime)
 
-		fmt.Printf("[*] Completed in: %s\n\n", Colors.BoldWhite(reductionDurationTime))
+		fmt.Printf("\n[*] Completed in: %s\n\n", Colors.BoldWhite(reductionDurationTime))
 
-		//////// To be removed //////////
-		fmt.Print(minimum, graph)
+		// Keep graph parameter for future use
+		_ = graph
 
 		return nil
 	},
