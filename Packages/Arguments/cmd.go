@@ -69,7 +69,7 @@ func init() {
 	// Add flags to the 'free' command.
 	freeArgument.Flags().SortFlags = true
 	freeArgument.Flags().StringP("file", "f", "", "Set input file")
-	freeArgument.Flags().Float64P("target", "t", 4.8, "Set target entropy value to achieve")
+	freeArgument.Flags().Float64P("target", "t", 4.6, "Set target entropy value to achieve")
 	freeArgument.Flags().BoolP("graph", "g", false, "Enable entropy graph")
 }
 
