@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -55,6 +56,7 @@ var freeArgument = &cobra.Command{
 		file, _ := cmd.Flags().GetString("file")
 		target, _ := cmd.Flags().GetFloat64("target")
 		graph, _ := cmd.Flags().GetBool("graph")
+		strategy, _ := cmd.Flags().GetString("strategy")
 
 		// Check if the file flag is empty
 		if file == "" {
@@ -68,6 +70,7 @@ var freeArgument = &cobra.Command{
 		getDateTime := time.Now().Format("2006-01-02 15:04:05")
 
 		fmt.Printf("[*] Starting PE entropy reduction on %s\n\n", Colors.BoldWhite(getDateTime))
+		fmt.Printf("[*] Applied Strategy: %s\n\n", Colors.BoldBlue(strings.ToUpper(strategy)))
 
 		// Get absolute file path
 		filePath, err := Utils.GetAbsolutePath(file)
@@ -119,7 +122,7 @@ var freeArgument = &cobra.Command{
 		// Loop until we reach target entropy or can't reduce further
 		for currentEntropy > target && iterationCount < maxIterations {
 			// Call function named ApplyStrategy
-			modifiedData = Reduce.ApplyStrategy(modifiedData, 60000)
+			modifiedData = Reduce.ApplyStrategy(modifiedData, 60000, strategy)
 
 			// Calculate new entropy
 			currentEntropy = Calculate.CalculateFullEntropy(modifiedData)

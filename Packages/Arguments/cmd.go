@@ -10,11 +10,11 @@ import (
 )
 
 var (
-	__version__      = "1.0"
+	__version__      = "2.0"
 	__license__      = "MIT"
 	__author__       = []string{"@nickvourd", "@IAMCOMPROMISED"}
 	__github__       = "https://github.com/nickvourd/SugarFree"
-	__version_name__ = "Zero Calories"
+	__version_name__ = "Ocean Words"
 	__ascii__        = `
  
 ███████╗██╗   ██╗ ██████╗  █████╗ ██████╗ ███████╗██████╗ ███████╗███████╗
@@ -70,6 +70,7 @@ func init() {
 	freeArgument.Flags().SortFlags = true
 	freeArgument.Flags().StringP("file", "f", "", "Set input file")
 	freeArgument.Flags().Float64P("target", "t", 4.6, "Set target entropy value to achieve")
+	freeArgument.Flags().StringP("strategy", "s", "zero", "Set strategy to apply (i.e., zero, word)")
 	freeArgument.Flags().BoolP("graph", "g", false, "Enable entropy graph")
 }
 
