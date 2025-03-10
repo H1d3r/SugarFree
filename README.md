@@ -13,10 +13,15 @@ Less sugar (entropy) for your binaries
 
 ## Description
 
-SugarFree is an open-source tool designed to analyze and reduce the entropy of a provided PE file. SugarFree appends null bytes (`0x00`) to the end of the file, increasing the binary size while reducing its entropy.
+SugarFree is an open-source tool designed to analyze and reduce the entropy of a provided PE file.
 
 ![Static Badge](https://img.shields.io/badge/Go-lang-cyan?style=flat&logoSize=auto)
-![Static Badge](https://img.shields.io/badge/Version-1.0%20(Zero%20Calories)-red?link=https%3A%2F%2Fgithub.com%2Fnickvourd%2FSugarFree%2Freleases)
+![Static Badge](https://img.shields.io/badge/Version-2.0%20(Ocean%20Words)-red?link=https%3A%2F%2Fgithub.com%2Fnickvourd%2FSugarFree%2Freleases)
+
+SugarFree uses two different techniques (strategies) to reduce the entropy of a PE file:
+
+- **zero**: Appends null bytes (`0x00`) to the end of the file, increasing its size while lowering entropy.  
+- **word**: Appends random English words in byte format to the end of the file, increasing its size while lowering entropy.
 
 The following list explains the meaning of each SugarFree command:
 
@@ -87,7 +92,7 @@ go build SugarFree
 ███████║╚██████╔╝╚██████╔╝██║  ██║██║  ██║██║     ██║  ██║███████╗███████╗
 ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝                                                        
 
-SugarFree v1.0 - Less sugar (entropy) for your binaries.
+SugarFree v2.0 - Less sugar (entropy) for your binaries.
 SugarFree is an open source tool licensed under MIT.
 Written with <3 by @nickvourd && @IAMCOMPROMISED...
 Please visit https://github.com/nickvourd/SugarFree for more...
