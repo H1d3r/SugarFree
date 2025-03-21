@@ -20,13 +20,13 @@ SugarFree is an open-source tool designed to analyze and reduce the entropy of a
 
 SugarFree uses two different techniques (strategies) to reduce the entropy of a PE file:
 
-- **zero**: Appends null bytes (`0x00`) to the end of the file, increasing its size while lowering entropy.  
-- **word**: Appends random English words in byte format to the end of the file, increasing its size while lowering entropy.
+- `zero`: Appends null bytes (`0x00`) to the end of the file, increasing its size while lowering entropy.  
+- `word`: Appends random English words in byte format to the end of the file, increasing its size while lowering entropy.
 
 The following list explains the meaning of each SugarFree command:
 
-- **info**: Calculates the entropy of a PE file and its sections.
-- **free**: Lowers the overall entropy of a PE file.
+- `info`: Calculates the entropy of a PE file and its sections.
+- `free`: Lowers the overall entropy of a PE file.
 
 SugarFree is written in Golang, a cross-platform language, enabling its use on both Windows and Linux systems.
 
